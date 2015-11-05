@@ -6,16 +6,18 @@ import java.io.*;
 import javax.imageio.*;
 
 public class ImageEditorFrame extends JFrame{
+ private ImageEditorPanel panel;
+
  public ImageEditorFrame(){
-	ImageEditorPanel panel = new ImageEditorPanel();
+	panel = new ImageEditorPanel();
 	add(panel);
-	
+
 	BufferedImage bufferedImage = new BufferedImage(400, 300, BufferedImage.TYPE_INT_RGB);
     Graphics g = bufferedImage.getGraphics();
     g.setColor(Color.YELLOW);
     g.fillOval(10, 10, 380, 280);
     panel.setImage(bufferedImage);
-	
+
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setSize(400, 300);
 	this.setVisible(true);
@@ -46,6 +48,17 @@ private void createMenuBar(){
  });
 }
   private void onOpen(){
-    JOptionPane.showMessageDialog(this, "Open Selected");
+ try{
+ JFileChooser fileChooser = new JFileChooser();
+ fileChooser.showOpenDialog(this);
+ File file = fileChooser.getSelectedFile();
+ BufferedImage image = ImageIO.read(file);
+ panel.setImage(image);
+ }
+ catch(IOException e){
+ JOptionPane.showMessageDialog(this,
+ "Die Datei konnte nicht geöffnet werden");
+ }
+
   }
 }
